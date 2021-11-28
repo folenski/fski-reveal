@@ -1,0 +1,21 @@
+{
+  "name": "fski-reveal",
+  "version": "1.0.0",
+  "description": "Animation sur une page html",
+  "main": "dist/Reveal.js",
+  "types": "dist/Reveal.d.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build-test": "esbuild tests/test-app.js  --bundle  --outfile=tests/essai/app.js ",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.4",
+    "esbuild": "^0.13.14"
+  }
+}
