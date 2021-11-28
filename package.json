@@ -1,7 +1,7 @@
 {
   "name": "fski-reveal",
   "version": "1.0.0",
-  "description": "Animation sur une page html",
+  "description": "Animation d'éléments du DOM",
   "main": "dist/Reveal.js",
   "types": "dist/Reveal.d.js",
   "files": [
