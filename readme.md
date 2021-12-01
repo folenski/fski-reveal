@@ -52,21 +52,21 @@ Sur la page html, il est nécessaire d'indiquer l'effet dans l'attribut data-rev
 ### html, l'attribut **data-reveal**
 
 Ce attribut peut prendre les valeurs suivantes :
-- display, pour un effet d'apparition
-- top, pour un effet de déplacement du bas vers le haut
-- left, pour un effet de déplacement de la gauche vers la droite
-- right, pour un effet de déplacement de la droite vers la gauche
+- **display**, pour un effet d'apparition
+- **top**, pour un effet de déplacement du bas vers le haut
+- **left**, pour un effet de déplacement de la gauche vers la droite
+- **right**, pour un effet de déplacement de la droite vers la gauche
 
 il est important d'ajouter à l'élément parant, l'attribut css : **overflow-x: hidden;**
 
 ### Javascript, la fonction Reveal.bind
 
-On peut passer un objet en paramétre, avec les champs  :
+On peut passer un objet en paramètre, les parenthèses indiquent les valeurs par défaut, avec les champs  :
 - **infinite** : boolean (false), les animations continuent même quand l'element a été affiché une 1ère fois
 - **threshold** : number (0.3), % de découverte de l'élément pour lancer l'animation
 - **tpsAnimDisplay** : string ("3s"), temps pour l'animation d'apparition
 - **tpsAnim** : string ("1.3s"), temps pour les animations de décages
-- **decalage** : number (3), valeur pour les décalages dans l'unité "rem"
+- **timerLoad** : number (300), timer pour déclencher les animations apres l'évènement "load"
 
 ## Resources
 

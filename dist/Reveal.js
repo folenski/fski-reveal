@@ -1,7 +1,8 @@
 /**
  * Class Reveal permet de gerer les animations de site
  *
- * le 24/11 - re ecriture en typescript
+ *  24/11 - re ecriture en typescript
+ *  29/11 - ajout d'un timer pour retarder les animations
  */
 /**
  * @property {HTMLElement} element
@@ -9,11 +10,12 @@
  */
 export class Reveal {
     constructor(element, param) {
-        this.decalage = 3;
+        this.timerLoad = 300; // en milliseconde
+        this.threshold = 0.3;
         this.tpsAnim = "1.3s";
         this.tpsAnimDisplay = "3s";
-        this.threshold = 0.3;
         this.infinite = false;
+        this.decalage = 3;
         this.reveal = "";
         this.doInit = () => {
             // on initialise les elements
@@ -51,9 +53,11 @@ export class Reveal {
             this.reveal = this.element.dataset.reveal;
         this.threshold = (param === null || param === void 0 ? void 0 : param.threshold) ? param.threshold : this.threshold;
         this.infinite = (param === null || param === void 0 ? void 0 : param.infinite) ? param.infinite : this.infinite;
-        this.tpsAnimDisplay = (param === null || param === void 0 ? void 0 : param.tpsAnimDisplay) ? param.tpsAnimDisplay : this.tpsAnimDisplay;
+        this.tpsAnimDisplay = (param === null || param === void 0 ? void 0 : param.tpsAnimDisplay)
+            ? param.tpsAnimDisplay
+            : this.tpsAnimDisplay;
         this.tpsAnim = (param === null || param === void 0 ? void 0 : param.tpsAnim) ? param.tpsAnim : this.tpsAnim;
-        this.decalage = (param === null || param === void 0 ? void 0 : param.decalage) ? param.decalage : this.decalage;
+        this.timerLoad = (param === null || param === void 0 ? void 0 : param.timerLoad) ? param.timerLoad : this.timerLoad;
         const observer = new IntersectionObserver((entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
@@ -73,8 +77,10 @@ export class Reveal {
         });
         this.doInit();
         window.addEventListener("load", () => {
-            if (this.element)
-                observer.observe(this.element);
+            if (!this.element)
+                return;
+            const el = this.element;
+            setTimeout(() => observer.observe(el), this.timerLoad);
         });
     }
     static async bind(param = {}) {

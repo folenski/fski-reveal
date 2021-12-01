@@ -1,7 +1,8 @@
 /**
  * Class Reveal permet de gerer les animations de site
  *
- * le 24/11 - re ecriture en typescript
+ *  24/11 - re ecriture en typescript
+ *  29/11 - ajout d'un timer pour retarder les animations
  */
 
 type InitReveal = {
@@ -9,7 +10,7 @@ type InitReveal = {
   threshold?: number;
   tpsAnimDisplay?: string;
   tpsAnim?: string;
-  decalage?: number;
+  timerLoad?: number;
 };
 
 /**
@@ -17,11 +18,12 @@ type InitReveal = {
  * @property {{y: number, variable: boolean}} options
  */
 export class Reveal {
-  decalage = 3;
+  timerLoad = 300; // en milliseconde
+  threshold = 0.3;
   tpsAnim = "1.3s";
   tpsAnimDisplay = "3s";
-  threshold = 0.3;
   infinite = false;
+  private decalage = 3;
   private element?: HTMLElement;
   private reveal: string = "";
   private isVisible?: boolean;
@@ -31,9 +33,11 @@ export class Reveal {
     if (this.element.dataset.reveal) this.reveal = this.element.dataset.reveal;
     this.threshold = param?.threshold ? param.threshold : this.threshold;
     this.infinite = param?.infinite ? param.infinite : this.infinite;
-    this.tpsAnimDisplay = param?.tpsAnimDisplay ? param.tpsAnimDisplay : this.tpsAnimDisplay;
+    this.tpsAnimDisplay = param?.tpsAnimDisplay
+      ? param.tpsAnimDisplay
+      : this.tpsAnimDisplay;
     this.tpsAnim = param?.tpsAnim ? param.tpsAnim : this.tpsAnim;
-    this.decalage = param?.decalage ? param.decalage : this.decalage;
+    this.timerLoad = param?.timerLoad ? param.timerLoad : this.timerLoad;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -56,7 +60,9 @@ export class Reveal {
     this.doInit();
 
     window.addEventListener("load", () => {
-      if (this.element) observer.observe(this.element);
+      if (!this.element) return;
+      const el = this.element;
+      setTimeout(() => observer.observe(el), this.timerLoad);
     });
   }
 
@@ -78,7 +84,7 @@ export class Reveal {
 
     if (this.reveal == "right")
       this.element.style.transform = `translate(${this.decalage}rem)`;
-  }
+  };
 
   doReveal = (): void => {
     if (!this.element) return;
@@ -90,11 +96,11 @@ export class Reveal {
     if (this.reveal != "display") {
       this.element.style.transform = "translate(0)";
     }
-  }
+  };
 
   onResize = (): void => {
     this.doInit();
-  }
+  };
 
   static async bind(param: InitReveal = {}) {
     return Array.from(document.querySelectorAll("[data-reveal]")).map(

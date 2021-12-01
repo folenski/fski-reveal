@@ -1,25 +1,27 @@
 /**
  * Class Reveal permet de gerer les animations de site
  *
- * le 24/11 - re ecriture en typescript
+ *  24/11 - re ecriture en typescript
+ *  29/11 - ajout d'un timer pour retarder les animations
  */
 declare type InitReveal = {
     infinite?: boolean;
     threshold?: number;
     tpsAnimDisplay?: string;
     tpsAnim?: string;
-    decalage?: number;
+    timerLoad?: number;
 };
 /**
  * @property {HTMLElement} element
  * @property {{y: number, variable: boolean}} options
  */
 export declare class Reveal {
-    decalage: number;
+    timerLoad: number;
+    threshold: number;
     tpsAnim: string;
     tpsAnimDisplay: string;
-    threshold: number;
     infinite: boolean;
+    private decalage;
     private element?;
     private reveal;
     private isVisible?;
