@@ -1,8 +1,9 @@
 /**
  * Class Reveal permet de gerer les animations de site
  *
- *  24/11 - re ecriture en typescript
- *  29/11 - ajout d'un timer pour retarder les animations
+ *  24/11/2021 - re ecriture en typescript
+ *  29/11/2021 - ajout d'un timer pour retarder les animations
+ *  12/12/2021 - Amélioration des animations
  */
 
 type InitReveal = {
@@ -18,7 +19,7 @@ type InitReveal = {
  * @property {{y: number, variable: boolean}} options
  */
 export class Reveal {
-  timerLoad = 300; // en milliseconde
+  timerLoad = 100; // en milliseconde
   threshold = 0.3;
   tpsAnim = "1.3s";
   tpsAnimDisplay = "3s";
@@ -45,7 +46,9 @@ export class Reveal {
           if (entry.isIntersecting) {
             document.addEventListener("resize", this.onResize);
             this.isVisible = true;
-            this.doReveal();
+            window.requestAnimationFrame(() => {
+              this.doReveal();
+            });
           } else {
             this.isVisible = false;
             if (this.infinite) this.doInit();
@@ -62,28 +65,43 @@ export class Reveal {
     window.addEventListener("load", () => {
       if (!this.element) return;
       const el = this.element;
+      this.doInit(true);
       setTimeout(() => observer.observe(el), this.timerLoad);
     });
   }
-
-  doInit = (): void => {
-    // on initialise les elements
+  /**
+   * permet de gerer l'initialisation des éléments reveal
+   * @param transition  si vrai alors on ajoute les transactions
+   * @returns
+   */
+  doInit = (transition: boolean = false): void => {
     if (!this.element) return;
-    this.element.style.opacity = "0";
-    this.element.style.visibility = "hidden";
 
-    if (this.reveal == "display")
-      this.element.style.transition = `opacity ${this.tpsAnimDisplay} ease-out `;
-    else this.element.style.transition = this.tpsAnim;
+    if (!transition) {
+      // on initialise les elements
+      this.element.style.opacity = "0";
+      this.element.style.visibility = "hidden";
 
-    if (this.reveal == "top")
-      this.element.style.transform = `translate(0, ${-1 * this.decalage}rem)`;
-
-    if (this.reveal == "left")
-      this.element.style.transform = `translate(${-1 * this.decalage}rem)`;
-
-    if (this.reveal == "right")
-      this.element.style.transform = `translate(${this.decalage}rem)`;
+      switch (this.reveal) {
+        case "top":
+          this.element.style.transform = `translate(0, ${
+            -1 * this.decalage
+          }rem)`;
+          break;
+        case "left":
+          this.element.style.transform = `translate(${-1 * this.decalage}rem)`;
+          break;
+        case "right":
+          this.element.style.transform = `translate(${this.decalage}rem)`;
+          break;
+        default:
+          break;
+      }
+    } else {
+      if (this.reveal == "display")
+        this.element.style.transition = `opacity ${this.tpsAnimDisplay} ease-out `;
+      else this.element.style.transition = this.tpsAnim;
+    }
   };
 
   doReveal = (): void => {
@@ -91,11 +109,9 @@ export class Reveal {
     if (!this.isVisible) return;
 
     this.element.style.visibility = "inherit";
-    this.element.style.opacity = "1";
+    this.element.style.opacity = "";
 
-    if (this.reveal != "display") {
-      this.element.style.transform = "translate(0)";
-    }
+    if (this.reveal != "display") this.element.style.transform = "";
   };
 
   onResize = (): void => {
